@@ -1,0 +1,32 @@
+{
+  "id": "./",
+  "name": "元素小课堂 · 手机离线版",
+  "short_name": "元素小课堂",
+  "description": "和小氦一起探索氦、锂、铍、硼。完整下载后可离线注册、登录和学习。",
+  "lang": "zh-CN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#eef6f8",
+  "theme_color": "#eef6f8",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

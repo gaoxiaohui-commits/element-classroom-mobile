@@ -1,0 +1,55 @@
+:root { color-scheme: light; --bg: #eef6f8; --ink: #1c3442; --muted: #667e8a; --brand: #168da2; --line: #d7e7eb; font: 16px/1.6 "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+* { box-sizing: border-box; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+button, input { font: inherit; }
+button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+button:disabled { opacity: .6; cursor: wait; }
+button:focus-visible, input:focus-visible { outline: 3px solid #e5a332; outline-offset: 3px; }
+button { touch-action: manipulation; }
+.login-screen { min-height: 100svh; padding: max(28px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); display: grid; place-items: center; background: radial-gradient(ellipse at 8% 8%, #d9eeef, transparent 55%), radial-gradient(ellipse at 90% 95%, #e0eafa, transparent 55%), var(--bg); }
+.login-card { width: 100%; max-width: 430px; border: 1px solid #dcebed; border-radius: 26px; background: #fff; box-shadow: 0 18px 54px -30px #327e9155; padding: 27px 28px; text-align: center; }
+.app-icon { display: block; border-radius: 19px; margin: 0 auto 14px; }
+.eyebrow { color: #16869a; font-size: 12px; font-weight: 700; letter-spacing: .05em; margin: 0 0 6px; }
+h1 { font-size: 25px; line-height: 1.4; margin: 0; font-weight: 750; letter-spacing: -.03em; }
+.intro { margin: 8px 0 18px; font-size: 14px; color: var(--muted); }
+.offline-panel { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; padding: 9px 10px; font-size: 12px; color: #577783; background: #f0f7f8; border-radius: 10px; margin-bottom: 20px; }
+.offline-dot { background: #a0b8c0; width: 7px; height: 7px; border-radius: 50%; flex: 0 0 7px; }
+.offline-ready .offline-dot { background: #29a074; }
+.offline-ready .offline-panel { color: #237a60; background: #eff8f2; }
+.auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; border-radius: 12px; padding: 4px; background: #f0f5f6; margin-bottom: 18px; }
+.auth-tabs button { background: transparent; color: var(--muted); border: 0; border-radius: 9px; padding: 8px 2px; font-size: 14px; font-weight: 650; }
+.auth-tabs .selected { background: #fff; color: #10788b; box-shadow: 0 2px 7px #1c344212; }
+#login-form { text-align: left; }
+#login-form label { display: block; font-size: 14px; font-weight: 650; margin: 12px 0 6px; }
+#login-form input { display: block; width: 100%; min-height: 47px; padding: 10px 12px; color: var(--ink); background: #fbfdfe; border: 1px solid #ccdfe5; border-radius: 11px; font-size: 16px; }
+#login-form input::placeholder { color: #899da5; }
+.error { color: #b73e43; font-size: 13px; margin: 11px 0; min-height: 20px; overflow-wrap: anywhere; }
+.primary { display: block; width: 100%; padding: 12px 16px; border: 0; border-radius: 12px; color: #fff; background: var(--brand); box-shadow: 0 4px 0 #0e6c7d; font-weight: 700; }
+.secondary { display: block; width: 100%; padding: 11px 12px; margin: 10px 0; border: 1px solid #d2e3e8; border-radius: 11px; background: #f8fbfc; color: #315865; font-weight: 650; }
+.local-note { font-size: 12px; color: var(--muted); margin: 21px 0 13px; line-height: 1.8; }
+.login-links { display: flex; justify-content: center; flex-wrap: wrap; column-gap: 16px; row-gap: 4px; }
+.text-button { border: 0; background: transparent; color: #147f92; padding: 3px 0; font-size: 12px; }
+.learning-screen { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+.mobile-bar { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: calc(7px + env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 7px max(12px, env(safe-area-inset-left)); min-height: 49px; background: #fff; border-bottom: 1px solid var(--line); }
+.mobile-bar button { color: #246778; border: 0; background: #f1f7f8; border-radius: 8px; padding: 7px 9px; font-size: 13px; min-height: 36px; }
+.mobile-bar .home-button { background: transparent; padding-left: 0; white-space: nowrap; }
+.save-state { color: #6b828c; font-size: 11px; margin-left: auto; text-align: right; line-height: 1.35; }
+.save-failed .save-state { color: #b64534; }
+.account-button { display: inline-flex; align-items: center; min-width: 44px; max-width: 35vw; }
+#current-username { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#game-frame { border: 0; display: block; width: 100%; height: 100%; flex: 1 1 0; min-height: 0; background: var(--bg); }
+.update-banner { padding: 7px 12px; background: #fff4d9; font-size: 12px; display: flex; justify-content: center; gap: 10px; align-items: center; }
+.update-banner button { border: 0; border-radius: 6px; padding: 4px 9px; background: #e6b24f; color: #493209; font-size: 12px; }
+dialog { width: min(430px, calc(100% - 28px)); max-height: calc(100dvh - 40px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); overflow-y: auto; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 23px; box-shadow: 0 16px 55px #173f5540; }
+dialog::backdrop { background: #19394680; }
+.dialog-heading { display: flex; align-items: center; gap: 12px; justify-content: space-between; margin-bottom: 15px; }
+.dialog-heading h2 { margin: 0; font-size: 21px; }
+.close-button { border: 0; color: #577582; background: #f0f6f8; border-radius: 50%; font-size: 24px; width: 36px; height: 36px; line-height: 1; }
+dialog p, dialog li { font-size: 14px; }
+.install-steps { margin: 15px 0 22px; padding-left: 21px; }
+.install-steps li { padding-left: 4px; margin: 13px 0; }
+.small-note { color: var(--muted); font-size: 12px; line-height: 1.8; }
+.app-notice { position: fixed; bottom: max(24px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: max-content; max-width: calc(100% - 32px); border-radius: 13px; background: #203e4a; color: #fff; padding: 11px 16px; font-size: 13px; z-index: 100; box-shadow: 0 5px 20px #203e4a30; }
+@media (max-width: 360px) { .login-card { padding: 23px 21px; } h1 { font-size: 23px; } .mobile-bar { gap: 5px; } .save-state { font-size: 10px; } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }

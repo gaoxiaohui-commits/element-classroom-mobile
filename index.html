@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#eef6f8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="元素小课堂">
+  <meta name="description" content="跟小氦学习氦、锂、铍、硼。下载完成后可以离线学习，每个账号单独保存进度。">
+  <title>元素小课堂 · 手机离线版</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="stylesheet" href="app.css">
+  <script src="offline-vault.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div id="login-screen" class="login-screen">
+    <main class="login-card">
+      <img class="app-icon" src="icons/icon-192.png" alt="元素小课堂图标" width="76" height="76">
+      <p class="eyebrow">元素小课堂 · 手机离线版</p>
+      <h1>把元素小镇装进口袋</h1>
+      <p class="intro">跟小氦一起，认识氦、锂、铍、硼。</p>
+      <div class="offline-panel" aria-live="polite">
+        <span class="offline-dot" aria-hidden="true"></span><span id="offline-state">正在准备离线游戏…</span>
+        <button id="offline-retry" class="text-button" type="button" hidden>重试</button>
+      </div>
+      <div class="auth-tabs" role="tablist" aria-label="登录或注册">
+        <button type="button" role="tab" aria-selected="true" class="selected" data-auth-mode="login">登录</button>
+        <button type="button" role="tab" aria-selected="false" data-auth-mode="register">注册新账号</button>
+      </div>
+      <form id="login-form">
+        <label for="username">用户名</label>
+        <input id="username" name="username" autocomplete="username" placeholder="输入用户名" minlength="2" maxlength="24" required>
+        <label for="password">密码</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="至少 8 个字符" minlength="8" maxlength="256" required>
+        <div id="confirm-wrap" hidden>
+          <label for="confirm-password">再输入一次密码</label>
+          <input id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" placeholder="确认密码" minlength="8" maxlength="256" disabled required>
+        </div>
+        <p id="auth-error" class="error" role="alert"></p>
+        <button id="auth-submit" type="submit" class="primary">登录，开始学习</button>
+      </form>
+      <p class="local-note">账号与进度只保存在当前应用。<br>苹果手机请先安装到桌面，从图标打开后再注册。<br>下载完成后，断网也能注册、登录和学习。</p>
+      <div class="login-links">
+        <button id="show-install" class="text-button" type="button">安装到手机桌面</button>
+        <button id="restore-login" class="text-button" type="button">从备份恢复</button>
+      </div>
+    </main>
+  </div>
+
+  <div id="learning-screen" class="learning-screen" hidden>
+    <header class="mobile-bar">
+      <button id="home-button" class="home-button" type="button" aria-label="回到课程目录">⌂ <span>课程目录</span></button>
+      <span id="save-state" class="save-state" role="status">已保存在本机</span>
+      <button id="save-retry" class="text-button" type="button" hidden>重试</button>
+      <button id="account-button" class="account-button" type="button" aria-label="账号与备份"><span id="current-username"></span><span aria-hidden="true"> ▾</span></button>
+    </header>
+    <div id="update-banner" class="update-banner" hidden>有新版本可用 <button id="update-button" type="button">保存进度并更新</button></div>
+    <iframe id="game-frame" title="元素学习游戏" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  </div>
+
+  <dialog id="install-dialog" aria-labelledby="install-title">
+    <div class="dialog-heading"><h2 id="install-title">安装到手机桌面</h2><button type="button" class="close-button" data-close-dialog="install-dialog" aria-label="关闭安装说明">×</button></div>
+    <p>首次安装时保持联网，等到页面显示<strong>“已可离线使用”</strong>，再添加到桌面。</p>
+    <ol class="install-steps">
+      <li><strong>苹果手机</strong><br>用 Safari 打开这个网址 → 分享 → 添加到主屏幕。从桌面图标打开后再注册账号。</li>
+      <li><strong>安卓手机</strong><br>用 Chrome 打开这个网址 → 菜单 → 添加到主屏幕或安装应用。</li>
+      <li><strong>确认离线可用</strong><br>保持联网，从桌面图标打开一次，确认显示“已可离线使用”，再打开飞行模式试玩。</li>
+    </ol>
+    <button id="native-install" type="button" class="primary" hidden>安装元素小课堂</button>
+    <p class="small-note">如果已经在 Safari 中学习过，请先在“账号与进度”导出备份，再从桌面版恢复。Safari 与桌面版的账号数据可能分开保存。</p>
+    <p class="small-note">在微信等 App 内打开时，请先选择“在浏览器中打开”。建议使用 iOS 15.4 或更新版本、或新版安卓 Chrome。</p>
+  </dialog>
+
+  <dialog id="account-dialog" aria-labelledby="account-title">
+    <div class="dialog-heading"><h2 id="account-title">账号与进度</h2><button type="button" class="close-button" data-close-dialog="account-dialog" aria-label="关闭账号设置">×</button></div>
+    <p>当前账号：<strong id="dialog-username"></strong></p>
+    <p id="dialog-offline-state" class="small-note">正在检查离线游戏…</p>
+    <p class="small-note">学习记录只存在这台手机。换手机、卸载或清理浏览器数据前，请先导出备份。</p>
+    <button id="backup-button" type="button" class="secondary">导出本机账号与进度备份</button>
+    <button id="restore-button" type="button" class="secondary">从备份恢复</button>
+    <button id="install-from-account" type="button" class="secondary">安装到手机桌面</button>
+    <button id="logout-button" type="button" class="secondary">退出登录</button>
+    <p id="account-message" class="error" role="status"></p>
+    <p class="small-note">备份包含本机所有账号的加密进度，恢复后仍需要原密码。请妥善保管密码。</p>
+  </dialog>
+  <input id="restore-file" type="file" accept="application/json,.json" hidden>
+  <div id="app-notice" class="app-notice" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
