@@ -10,8 +10,10 @@
   const MAX_PROGRESS_BYTES = 256 * 1024;
   const MAX_BACKUP_BYTES = 10 * 1024 * 1024;
   const MAX_ACCOUNTS = 100;
+  // Add courses without changing the database or encrypted backup format: old
+  // accounts keep their existing keys, and a new course starts with no progress.
   const KEYS = new Set(['hlbb-prog', 'hlbb-teach', 'hlbb-muted',
-    'hlbb-solo-He', 'hlbb-solo-Li', 'hlbb-solo-Be', 'hlbb-solo-B']);
+    'hlbb-solo-He', 'hlbb-solo-Li', 'hlbb-solo-Be', 'hlbb-solo-B', 'h2-adventure-v1']);
   const RECORD_FIELDS = ['id', 'username', 'usernameKey', 'salt', 'iterations',
     'version', 'iv', 'ciphertext', 'createdAt'];
   const encoder = new TextEncoder();

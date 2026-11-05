@@ -1,8 +1,8 @@
 /* Versioned, scope-local precache. Account data is kept by the app in IndexedDB. */
 'use strict';
 
-const APP_VERSION = 'mobile-490045d42ab68136';
-const PRECACHE_PATHS = ["index.html", "app.js", "app.css", "offline-vault.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/maskable-512.png", "games/index.html", "games/氦元素小课堂.html", "games/氦锂铍硼总复习.html", "games/硼元素小课堂.html", "games/铍元素小课堂.html", "games/锂元素小课堂.html"];
+const APP_VERSION = 'mobile-4b36b6544032220d';
+const PRECACHE_PATHS = ["index.html", "app.js", "app.css", "offline-vault.js", "hydrogen-adapter.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/maskable-512.png", "games/index.html", "games/氦元素小课堂.html", "games/氦锂铍硼总复习.html", "games/硼元素小课堂.html", "games/铍元素小课堂.html", "games/锂元素小课堂.html", "games/氢元素探险.html"];
 const SCOPE = new URL(self.registration.scope);
 const CACHE_PREFIX = 'element-classroom-mobile:' + encodeURIComponent(SCOPE.href) + ':';
 const CACHE_NAME = CACHE_PREFIX + APP_VERSION;

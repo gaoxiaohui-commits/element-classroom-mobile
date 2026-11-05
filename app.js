@@ -3,13 +3,13 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const vault = window.ElementOfflineVault;
-  const keys = new Set(['hlbb-solo-He', 'hlbb-solo-Li', 'hlbb-solo-Be', 'hlbb-solo-B', 'hlbb-prog', 'hlbb-teach', 'hlbb-muted']);
+  const keys = new Set(['hlbb-solo-He', 'hlbb-solo-Li', 'hlbb-solo-Be', 'hlbb-solo-B', 'hlbb-prog', 'hlbb-teach', 'hlbb-muted', 'h2-adventure-v1']);
   const copy = value => value == null ? value : JSON.parse(JSON.stringify(value));
   let user = null, data = {}, authMode = 'login', savePromise = null, sequence = 0;
   let registration = null, installPrompt = null, updateRequested = false;
   let readyResolve, offlineReady = false, offlineText = '正在准备离线游戏…';
   const pending = new Map();
-  const accountAPI = { ready: new Promise(resolve => { readyResolve = resolve; }), store: null, flush: null };
+  const accountAPI = { ready: new Promise(resolve => { readyResolve = resolve; }), store: null, flush: null, supportsKey: key => keys.has(key) };
 
   function saveLabel(text, failed = false) {
     $('save-state').textContent = text;
@@ -173,12 +173,13 @@
   }
   function watchRegistration(reg) {
     registration = reg;
-    if (reg.waiting) $('update-banner').hidden = false;
+    const showWaitingUpdate = () => { $('update-banner').hidden = !(reg.waiting && navigator.serviceWorker.controller); };
+    showWaitingUpdate();
     const watch = worker => {
       if (!worker) return;
       worker.addEventListener('statechange', () => {
-        if (worker.state === 'activated') checkOffline();
-        if (worker.state === 'installed' && reg.waiting) $('update-banner').hidden = false;
+        if (worker.state === 'activated') { showWaitingUpdate(); checkOffline(); }
+        if (worker.state === 'installed') showWaitingUpdate();
         if (worker.state === 'redundant' && !offlineReady) offlineStatus(false, '下载未完成，请保持联网并重试', true);
       });
     };
@@ -205,7 +206,13 @@
   document.querySelectorAll('[data-close-dialog]').forEach(button => button.addEventListener('click', () => $(button.dataset.closeDialog).close()));
   $('login-form').addEventListener('submit', authenticate);
   $('save-retry').addEventListener('click', () => flush().catch(error => notice(error.message)));
-  $('home-button').addEventListener('click', () => { if (user) $('game-frame').src = 'games/index.html'; });
+  $('home-button').addEventListener('click', async () => {
+    if (!user) return;
+    const button = $('home-button'); button.disabled = true;
+    try { await flush(); $('game-frame').src = 'games/index.html'; }
+    catch (_) { notice('进度尚未保存，请先重试保存，再返回课程目录。'); }
+    finally { button.disabled = false; }
+  });
   $('account-button').addEventListener('click', () => { $('account-message').textContent = ''; $('dialog-offline-state').textContent = offlineText; $('account-dialog').showModal(); });
   $('logout-button').addEventListener('click', logout);
   $('backup-button').addEventListener('click', exportBackup);
@@ -226,7 +233,8 @@
   });
   window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); installPrompt = event; $('native-install').hidden = false; });
   navigator.serviceWorker?.addEventListener('controllerchange', () => {
-    if (updateRequested) location.reload(); else checkOffline();
+    if (updateRequested) location.reload();
+    else { $('update-banner').hidden = !registration?.waiting; checkOffline(); }
   });
   window.addEventListener('online', () => { if (!offlineReady) prepareOffline(); });
   document.addEventListener('visibilitychange', () => { if (document.hidden && pending.size) flush().catch(() => {}); });
