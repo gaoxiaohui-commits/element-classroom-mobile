@@ -693,6 +693,7 @@
     const signal = ctrl.signal;
     const cleanups = [];
     let mistakes = 0, finished = false;
+    const tried = new Set();
     const guard = () => { if (signal.aborted) throw abortErr(); };
     const api = {
       def, stage: stageEl, signal, h, chem, frag, shuffle, ICON, state,
@@ -733,6 +734,11 @@
       toast(msg, kind, ms) { Toast.show(msg, kind, ms); },
       confetti() { Confetti.burst(); },
       mistake(msg) { mistakes++; Sfx.play('wrong'); Dialog.setMood('serious'); if (msg) Toast.show(msg, 'bad', 3400); },
+      // Count a wrong setup only the first time it is submitted; resubmitting it unchanged repeats the feedback without costing another star.
+      mistakeOnce(key, msg) {
+        if (tried.has(key)) { Sfx.play('wrong'); Dialog.setMood('serious'); if (msg) Toast.show(msg, 'bad', 3400); return false; }
+        tried.add(key); api.mistake(msg); return true;
+      },
       good(msg) { Sfx.play('correct'); Dialog.setMood('happy'); if (msg) Toast.show(msg, 'good'); },
       steps(names) { Steps.set(names); },
       step(i) { Steps.go(i); },

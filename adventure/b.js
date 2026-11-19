@@ -55,7 +55,7 @@
   }});
 
   function neutronScene(mode){const depth=mode==='out'?0:mode==='mid'?85:152;const paths=[83,121,160,199];const rays=paths.map((y,i)=>{const hit=depth>0&&y<55+depth;return `<path d="M70 ${y}H${hit?249:414}" stroke="var(--aqua)" stroke-width="3" stroke-dasharray="7 5" fill="none"/><circle cx="${hit?249:414}" cy="${y}" r="7" fill="${hit?'var(--coral)':'var(--mint)'}"/>`;}).join('');return svg('<rect x="47" y="55" width="390" height="172" rx="16" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>'+rays+`<rect x="238" y="${55+depth-152}" width="24" height="152" rx="5" fill="var(--ink-3)"/><path d="M225 55h50" stroke="var(--glass-stroke)" stroke-width="5"/>`+txt(240,251,mode==='out'?'控制材料抽出':mode==='mid'?'部分插入：一部分中子被吸收':'更多插入：吸收作用增强',15)+txt(240,274,'单向路径与粒子数量为教学示意',11));}
-  H2.registerLevel({id:'b-neutron',order:4,title:'拦住经过的中子',subtitle:'含硼控制材料的吸收作用',css:css('b-neutron'),card:{title:'硼与中子吸收',points:['硼中的硼-10 能有效吸收中子，含硼材料因此可用于特定的控制或屏蔽用途。','控制材料可使用碳化硼等含硼材料，并非简单的纯硼金属棒。','插入更多控制材料，通常会增强中子吸收；图中不模拟真实反应堆。']},async run(api){
+  H2.registerLevel({id:'b-neutron',order:4,title:'拦住经过的中子',subtitle:'含硼控制材料的吸收作用',css:css('b-neutron'),card:{title:'硼与中子吸收',points:['硼中的硼-10 能有效吸收中子，含硼材料因此可用于特定的控制或屏蔽用途。','控制材料可使用碳化硼等含硼材料，并非一根简单的纯硼棒（硼不是金属）。','插入更多控制材料，通常会增强中子吸收；图中不模拟真实反应堆。']},async run(api){
     api.steps(['认识','切换','因果','记录']);api.step(0);
     const lab=H2.Lab.create(api,{title:'中子吸收定性模型',svg:neutronScene('out')});lab.note('这是“材料吸收中子”的简化图解，不是反应堆操作训练或计算。粒子数、路径和插入位置不是真实参数。');
     await api.say(['硼还有一项看不见的本领：帮助吸收中子。','这里用含硼控制材料来演示，点点代表示意中子。']);

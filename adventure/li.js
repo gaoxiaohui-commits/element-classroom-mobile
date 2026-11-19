@@ -170,7 +170,7 @@ ${txt(205, 324, outer ? '3 个质子，3 个电子' : '3 个质子，2 个电子
     }
   });
 
-  function batterySVG(charge, mode, flowing) {
+  function batterySVG(charge, mode, flowing, closed = true) {
     const left = charge, right = 4 - charge, reverse = mode === 'charge';
     const dots = (n, x) => Array.from({ length: n }, (_, i) => `<circle cx="${x}" cy="${138 + i * 27}" r="11" fill="var(--mint)"/>${txt(x, 142 + i * 27, '+', 'class="li-small"')}`).join('');
     const arrow = reverse ? '<path d="M322 180H204l12-9m-12 9 12 9"/>' : '<path d="M198 180H316l-12-9m12 9-12 9"/>';
@@ -179,7 +179,8 @@ ${txt(205, 324, outer ? '3 个质子，3 个电子' : '3 个质子，2 个电子
 <rect x="65" y="103" width="105" height="144" rx="10" fill="var(--aqua-soft)"/><rect x="350" y="103" width="105" height="144" rx="10" fill="var(--coral-soft)"/>
 <path d="M260 105V247" stroke="var(--line)" stroke-width="14" stroke-dasharray="6 5"/>
 ${txt(115, 124, '负极材料', 'class="li-small"')}${txt(405, 124, '正极材料', 'class="li-small"')}${dots(left, 115)}${dots(right, 405)}
-<path d="M115 88V43h115m60 0h115v45" fill="none" stroke="var(--aqua)" stroke-width="3"/>
+${closed ? '<path d="M115 88V43h115m60 0h115v45" fill="none" stroke="var(--aqua)" stroke-width="3"/>'
+    : `<path d="M115 88V43h50m30 0h35m60 0h115v45" fill="none" stroke="var(--aqua)" stroke-width="3"/><path d="M165 43l24-17" stroke="var(--coral)" stroke-width="3" stroke-linecap="round"/>${txt(180, 78, '断开', 'class="li-small"')}`}
 <rect x="210" y="24" width="100" height="39" rx="10" fill="${flowing && !reverse ? 'var(--spark-soft)' : 'var(--card)'}" stroke="var(--line)" stroke-width="2"/>
 ${txt(260, 49, reverse ? '充电器' : '探险车', 'class="li-small"')}
 ${electrons}${txt(425, 37, '外电路 e⁻', 'class="li-small"')}
@@ -228,9 +229,10 @@ ${txt(260, 319, '储能示意：' + charge + ' / 4', 'class="li-num"')}`, '锂�
           if (discharged) L.record.append(api.h('p', null, '放电观察：Li⁺ 负极材料 → 正极材料'));
         } });
         function redraw(flowing) {
-          L.draw(batterySVG(charge, mode, !!flowing)); source.setAttribute('aria-pressed', String(mode === 'charge')); vehicle.setAttribute('aria-pressed', String(mode === 'discharge'));
+          L.draw(batterySVG(charge, mode, !!flowing, closed)); source.setAttribute('aria-pressed', String(mode === 'charge')); vehicle.setAttribute('aria-pressed', String(mode === 'discharge'));
           switcher.textContent = closed ? '断开外电路' : '接通外电路';
-          L.note((closed ? '电路接通。' : '电路断开。') + (mode === 'charge' ? '充电器输入电能，Li⁺ 向负极材料移动。' : '电池向探险车供能，Li⁺ 向正极材料移动。') + ' 储能示意：' + charge + '/4。');
+          L.note((closed ? '电路接通。' + (mode === 'charge' ? '充电器输入电能，Li⁺ 向负极材料移动。' : '电池向探险车供能，Li⁺ 向正极材料移动。')
+            : '电路断开：外电路没有电流，Li⁺ 也不再迁移。') + ' 储能示意：' + charge + '/4。');
         }
         L.controls.append(source, vehicle, switcher, tick); L.task.append(api.h('p', { class: 'muted' }, '接充电器 → 运行四步；再接探险车 → 运行四步。也可以断开电路对照。'), finish); redraw();
       });
@@ -290,7 +292,7 @@ ${txt(260, 322, surface === 'desk' ? '干燥通风、远离可燃物的台面' :
           if (!healthy) problems.push('异常设备不能继续使用，应通知成人并由专业人员处理');
           if (surface !== 'desk') problems.push('枕头和床铺容易阻碍散热，也可能燃烧');
           if (charger !== 'matched') problems.push('应按设备说明选择匹配、合格的充电器');
-          if (problems.length) { api.mistake(problems.join('；') + '。'); L.note(problems.join('；') + '。'); return; }
+          if (problems.length) { api.mistakeOnce(`safety:${healthy}-${surface}-${charger}`, problems.join('；') + '。'); L.note(problems.join('；') + '。'); return; }
           L.draw(serviceSVG(surface, charger, healthy, true)); L.note('场景已通过检查。现实使用仍要遵守设备说明，保持观察。'); api.good('检查通过！'); resolve();
         } });
         L.task.append(api.h('p', { class: 'muted' }, '在图下修改条件，再按检查。这里不会真的接通电源。'), check); update();

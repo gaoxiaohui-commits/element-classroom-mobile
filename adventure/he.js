@@ -106,8 +106,8 @@
         air.onclick = () => { gas = 'air'; paint(); }; he.onclick = () => { gas = 'He'; paint(); }; weight.onclick = () => { heavy = !heavy; paint(); };
         send.onclick = () => {
           lab.setSVG(balloonPicture(gas, heavy, true));
-          if (gas !== 'He') { api.mistake('空气气球连同球皮和信封的总重太大，换一种气体试试。'); return; }
-          if (heavy) { api.mistake('配重也算总重！即使充氦气，负担太重仍然升不起来。'); return; }
+          if (gas !== 'He') { api.mistakeOnce(`balloon:${gas}-${heavy}`, '空气气球连同球皮和信封的总重太大，换一种气体试试。'); return; }
+          if (heavy) { api.mistakeOnce(`balloon:${gas}-${heavy}`, '配重也算总重！即使充氦气，负担太重仍然升不起来。'); return; }
           send.disabled = true; api.good('气体与负重都选对了，信封升起来了！'); resolve();
         }; paint();
       });
@@ -254,7 +254,7 @@
         const opts = ['Na', 'H', 'He'].map(sample => api.button({ Na: '钠 Na', H: '氢 H', He: '氦 He' }[sample], { primary: false }));
         row(api, lab, opts); const check = api.button('叠合检查线位'); check.disabled = true; lab.controls.append(check);
         opts.forEach((b, i) => { const sample = ['Na', 'H', 'He'][i]; b.onclick = () => { selected = sample; opts.forEach(x => x.setAttribute('aria-pressed', String(x === b))); check.disabled = false; lab.setSVG(spectrumPicture(true, selected)); }; });
-        check.onclick = () => { if (selected !== 'He') { api.mistake('这份样本的关键线位没有重合。比较的是线位，而不只是名称或颜色。'); return; } check.disabled = true; opts.forEach(b => { b.disabled = true; }); lab.setSVG(spectrumPicture(true, 'He', true)); api.good('太阳线索与地球氦样本相互印证！'); resolve(); };
+        check.onclick = () => { if (selected !== 'He') { api.mistakeOnce('spectrum:' + selected, '这份样本的关键线位没有重合。比较的是线位，而不只是名称或颜色。'); return; } check.disabled = true; opts.forEach(b => { b.disabled = true; }); lab.setSVG(spectrumPicture(true, 'He', true)); api.good('太阳线索与地球氦样本相互印证！'); resolve(); };
       });
       await api.say('从太阳的一条陌生线索，到地球样本的印证，小氦的发现是一段证据接力。');
       api.complete();
@@ -302,7 +302,7 @@
         const buttons = kinds.map(([, label]) => api.button(label, { primary: false })); row(api, lab, buttons);
         const check = api.button('提交冷源候选'); check.disabled = true; lab.controls.append(check);
         buttons.forEach((b, i) => { b.onclick = () => { selected = kinds[i][0]; lab.setSVG(coldPicture(selected)); check.disabled = false; buttons.forEach(x => x.setAttribute('aria-pressed', String(x === b))); }; });
-        check.onclick = () => { if (selected !== 'helium') { api.mistake(selected === 'nitrogen' ? '77 K 虽然很冷，仍然高于任务要求的 5 K。比较数字再选。' : '273 K 远高于 5 K，不能满足这个超低温候选要求。'); return; } check.disabled = true; buttons.forEach(b => { b.disabled = true; }); api.good('4.2 K 低于 5 K，符合这次温区筛选要求。'); resolve(); };
+        check.onclick = () => { if (selected !== 'helium') { api.mistakeOnce('cold:' + selected, selected === 'nitrogen' ? '77 K 虽然很冷，仍然高于任务要求的 5 K。比较数字再选。' : '273 K 远高于 5 K，不能满足这个超低温候选要求。'); return; } check.disabled = true; buttons.forEach(b => { b.disabled = true; }); api.good('4.2 K 低于 5 K，符合这次温区筛选要求。'); resolve(); };
       });
       api.step(2); task(lab, '同一种元素，不同的本领', '把任务与需要的性质连起来。先点卡片，再点框，也可以拖动。');
       await api.sortInto({ container: lab.notes, bins: [
@@ -356,12 +356,12 @@
           { text: '是，2 个质子确定了氦的身份', correct: true },
           { text: '不是，氦只能有 2 个中子', why: '氦-4 有 2 个中子，但氦还有其他同位素。质子数才决定元素身份。' },
           { text: '不是，电子排满后会变成另一种元素', why: '电子层排满不会改变原子核中的质子数。' }
-        ], explain: '这描述的是氦-3。质子数相同、中子数不同的原子属于同一元素的不同同位素。', lights: [1, 2] },
+        ], explain: '这描述的是氦-3。质子数相同、中子数不同的原子属于同一元素的不同同位素。', lights: [1] },
         { title: '第三封：低温实验室', intro: '一项任务需要筛选约 5 K 以下的冷源。', q: '哪一份性质证据与任务直接相关？', options: [
           { text: '液氦常压沸点约为 4.2 K', correct: true },
           { text: '氦气可以使轻质气球上升', why: '低密度解释浮力用途，却不能直接说明这个冷源温区是否够低。' },
           { text: '氦在太阳光谱中留下线索', why: '发现历史很有趣，但判断冷源要查温区与冷却要求。' }
-        ], explain: '用途要与相关性质相连，也要核对任务条件。', lights: [3, 4] }
+        ], explain: '用途要与相关性质相连，也要核对任务条件。', lights: [4] }
       ];
       for (const mission of missions) {
         task(lab, mission.title, mission.intro);
@@ -373,7 +373,7 @@
       await api.task(resolve => {
         const seen = new Set(); const buttons = memories.map(([title]) => api.button(title, { primary: false })); row(api, lab, buttons);
         const log = record(api, lab, '已整理 0 / 5 份记录。'); const go = api.button('五份记录齐了，领取证书'); go.disabled = true; lab.controls.append(go);
-        buttons.forEach((b, i) => { b.onclick = () => { seen.add(i); buttons.forEach(x => x.setAttribute('aria-pressed', String(x === b))); log.textContent = `已整理 ${seen.size} / 5：${memories[i][1]}`; lab.setSVG(missionPicture([...seen])); go.disabled = seen.size < memories.length; api.sfx('pop'); }; });
+        buttons.forEach((b, i) => { b.onclick = () => { seen.add(i); buttons.forEach(x => x.setAttribute('aria-pressed', String(x === b))); log.textContent = `已整理 ${seen.size} / 5：${memories[i][1]}`; lab.setSVG(missionPicture([...new Set([...solved, ...seen])])); go.disabled = seen.size < memories.length; api.sfx('pop'); }; });
         go.onclick = () => { if (!go.disabled) { api.good('五份研究记录整理完毕！'); resolve(); } };
       });
       api.step(3); task(lab, '给研究证书署名', '名字只用于这份学习证书。证书显示后可以截图保存。');

@@ -62,7 +62,7 @@
       check.addEventListener('click',()=>{
         if(solved)return;
         if(model.p!==z || model.n!==n || model.e!==z) {
-          api.mistake();
+          api.mistakeOnce(`atom:${model.p}-${model.n}-${model.e}`);
           feedback.textContent=model.p!==z?`${label}需要${z}个质子；改变质子数会变成另一种元素。`:model.n!==n?`这里指定${label}，需要${n}个中子；不同核素的中子数可以不同。`:`要成为中性原子，电子也需要${z}个，正负电荷才抵消。`;
           api.hint(feedback.textContent,'serious'); return;
         }
