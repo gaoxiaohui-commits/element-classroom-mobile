@@ -1,5 +1,19 @@
 <!doctype html><html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>页面未找到 · 元素小课堂</title></head><body>
-<h1>这个页面不存在</h1><p>请从元素小课堂的安装网址重新打开。</p>
+<title>正在打开元素小课堂…</title>
+<script>
+// A shared link often picks up extra characters (e.g. "**" or trailing Chinese text).
+// Send any unknown address back to the app's home page instead of a dead end.
+(function () {
+  var seg = location.pathname.split('/')[1];
+  var home = /\.github\.io$/.test(location.hostname) && seg ? '/' + seg + '/' : '/';
+  if (location.pathname !== home) location.replace(home);
+  window.__home = home;
+})();
+</script>
+<style>body{font:16px/1.6 system-ui,-apple-system,sans-serif;margin:0;padding:40px 22px;color:#1d3a45;background:#eef6f8;text-align:center;}a{color:#157d8f;font-weight:700;}</style>
+</head><body>
+<h1 style="font-size:22px">正在打开元素小课堂…</h1>
+<p>如果没有自动跳转，请点击：<a id="home" href="/element-classroom-mobile/">进入元素小课堂</a></p>
+<script>document.getElementById('home').href = window.__home || '/element-classroom-mobile/';</script>
 </body></html>
